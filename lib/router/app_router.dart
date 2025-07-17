@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madinaapp/authentication/authentication.dart';
-import 'package:madinaapp/home/home.dart';
+import 'package:madinaapp/home/view/client_main_page.dart';
+import 'package:madinaapp/home/view/shop_owner_home_page.dart';
+import 'package:madinaapp/home/view/logistic_home_page.dart';
 import 'package:madinaapp/models/models.dart';
 
 class AppRoutes {
@@ -30,7 +32,7 @@ class AppRouter {
         ),
         GoRoute(
           path: AppRoutes.clientHome,
-          builder: (context, state) => const ClientHomePage(),
+          builder: (context, state) => const ClientMainPage(),
         ),
         GoRoute(
           path: AppRoutes.shopOwnerHome,

@@ -1,3 +1,9 @@
-export 'client_home_page.dart';
+export 'client_main_page.dart';
+export 'client_catalog_page.dart';
+export 'client_cart_page.dart';
+export 'client_messages_page.dart';
+export 'client_profile_page.dart';
+export 'client_product_detail_page.dart';
+export 'client_chat_detail_page.dart';
 export 'shop_owner_home_page.dart';
 export 'logistic_home_page.dart';

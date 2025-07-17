@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madinaapp/authentication/authentication.dart';
 import 'package:madinaapp/products/products.dart';
+import 'package:madinaapp/cart/cart.dart';
 import 'package:madinaapp/l10n/l10n.dart';
 import 'package:madinaapp/repositories/repositories.dart';
 import 'package:madinaapp/router/router.dart';
@@ -29,6 +30,9 @@ class App extends StatelessWidget {
             create: (context) => ProductsBloc(
               productsRepository: context.read<ProductsRepository>(),
             )..add(const ProductsLoaded()),
+          ),
+          BlocProvider(
+            create: (context) => CartBloc(),
           ),
         ],
         child: const AppView(),
