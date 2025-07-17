@@ -531,6 +531,8 @@ class _CameraPageState extends State<CameraPage>
   }
 
   void _addNewProducts() {
+    print('🎥 CAMERA: Starting to add new products...');
+
     final newProducts = [
       Product(
         id: 'new_${DateTime.now().millisecondsSinceEpoch}_1',
@@ -555,15 +557,21 @@ class _CameraPageState extends State<CameraPage>
       ),
     ];
 
+    print('🎥 CAMERA: Created ${newProducts.length} new products');
+
     // Store created products in state
     setState(() {
       _createdProducts = newProducts;
     });
 
-    // Add products to ProductsBloc instead of DummyData directly
+    // Add products to ProductsBloc
+    print('🎥 CAMERA: Adding products to ProductsBloc...');
     for (final product in newProducts) {
+      print('🎥 CAMERA: Adding product: ${product.name} (ID: ${product.id})');
       context.read<ProductsBloc>().add(ProductAdded(product));
     }
+
+    print('🎥 CAMERA: Finished adding all products to bloc');
   }
 
   String _formatDuration(int seconds) {
@@ -1196,7 +1204,8 @@ class _CameraPageState extends State<CameraPage>
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () => Navigator.of(context)
+                      .pop(true), // Return true when products were created
                   child: const Text(
                     'Готово',
                     style: TextStyle(
@@ -1302,8 +1311,8 @@ class _CameraPageState extends State<CameraPage>
                 onPressed: () {
                   // Show success snackbar
                   _showSuccessSnackbar();
-                  // Pop the screen
-                  Navigator.of(context).pop();
+                  // Pop the screen with a result indicating products were added
+                  Navigator.of(context).pop(true);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF006FFD),

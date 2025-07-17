@@ -15,12 +15,19 @@ class ProductsRepository {
       _orders =
           List.from(DummyData.orders); // Initialize orders from dummy data
       _isInitialized = true;
+      print(
+          '🏪 ProductsRepository: Initialized with ${_products.length} products');
     }
-    return _products;
+    return List.from(
+        _products); // Return a copy to prevent external modification
   }
 
   Future<void> addProduct(Product product) async {
+    print(
+        '🏪 ProductsRepository: Adding product: ${product.name} (ID: ${product.id})');
     _products.add(product);
+    print(
+        '🏪 ProductsRepository: Total products after add: ${_products.length}');
   }
 
   Future<void> updateProduct(Product product) async {

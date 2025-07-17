@@ -51,40 +51,49 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     Emitter<ProductsState> emit,
   ) async {
     print(
-        'DEBUG: ProductAdded event received for product: ${event.product.name}');
+        '🔥 ProductsBloc: ProductAdded event received for product: ${event.product.name} (ID: ${event.product.id})');
+
     try {
       // Add product to repository
       await _productsRepository.addProduct(event.product);
-      print('DEBUG: Product added to repository successfully');
+      print('✅ ProductsBloc: Product added to repository successfully');
 
-      // Get updated products and orders
+      // Get updated products and orders from repository
       final products = await _productsRepository.getProducts();
       final featuredProducts = await _productsRepository.getFeaturedProducts();
       final orders = await _productsRepository.getOrders();
 
-      print('DEBUG: Total products after add: ${products.length}');
+      print('📊 ProductsBloc: Total products after add: ${products.length}');
+      print(
+          '📊 ProductsBloc: Product IDs: ${products.map((p) => p.id).toList()}');
 
+      // Apply current filters and search to get filtered products
       final filteredProducts = _applyFiltersAndSearch(
         products,
         state.filters,
         state.searchQuery,
       );
 
-      print('DEBUG: Filtered products after add: ${filteredProducts.length}');
-      print('DEBUG: Current filters: ${state.filters}');
-      print('DEBUG: Current search query: "${state.searchQuery}"');
+      print(
+          '🔍 ProductsBloc: Filtered products after add: ${filteredProducts.length}');
+      print('🔍 ProductsBloc: Current filters: ${state.filters}');
+      print('🔍 ProductsBloc: Current search query: "${state.searchQuery}"');
 
+      // Emit new state with all updated data
       emit(state.copyWith(
+        status: ProductsStatus.success, // Ensure status is success
         products: products,
         filteredProducts: filteredProducts,
         featuredProducts: featuredProducts,
         orders: orders,
       ));
 
+      print('✅ ProductsBloc: New state emitted successfully');
       print(
-          'DEBUG: State emitted with ${filteredProducts.length} filtered products');
+          '📊 ProductsBloc: Emitted state has ${filteredProducts.length} filtered products');
+      print('📊 ProductsBloc: Emitted state status: ${ProductsStatus.success}');
     } catch (error) {
-      print('DEBUG: Error in ProductAdded: $error');
+      print('❌ ProductsBloc: Error in ProductAdded: $error');
       emit(state.copyWith(
         status: ProductsStatus.failure,
         error: error.toString(),

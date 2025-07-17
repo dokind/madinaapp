@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madinaapp/authentication/bloc/bloc.dart';
+import 'package:madinaapp/products/products.dart';
 import 'package:madinaapp/home/widgets/shop_owner_navigation.dart';
 import 'package:madinaapp/home/widgets/home_tab.dart';
 import 'package:madinaapp/home/widgets/catalog_tab.dart';
@@ -44,6 +45,13 @@ class _ShopOwnerHomePageState extends State<ShopOwnerHomePage> {
           setState(() {
             _selectedIndex = index;
           });
+
+          // If switching to catalog tab (index 1), refresh products
+          if (index == 1 && context.mounted) {
+            print(
+                '🔄 SHOP_OWNER: Switching to catalog tab, refreshing products');
+            context.read<ProductsBloc>().add(const ProductsLoaded());
+          }
         },
       ),
     );

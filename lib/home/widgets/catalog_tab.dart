@@ -77,6 +77,14 @@ class _CatalogTabState extends State<CatalogTab> with TickerProviderStateMixin {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh products whenever dependencies change (e.g., tab switch, navigation)
+    print('🔄 CATALOG: didChangeDependencies - refreshing products');
+    context.read<ProductsBloc>().add(const ProductsLoaded());
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _pulseController.dispose();
@@ -490,11 +498,28 @@ class _CatalogTabState extends State<CatalogTab> with TickerProviderStateMixin {
                 '🔄 CATALOG LISTENER: Products updated! Total: ${state.products.length}, Filtered: ${state.filteredProducts.length}');
           }
         },
+        buildWhen: (previous, current) {
+          // Rebuild when products, filtered products, or status changes
+          final shouldRebuild = previous.products != current.products ||
+              previous.filteredProducts != current.filteredProducts ||
+              previous.status != current.status;
+
+          if (shouldRebuild) {
+            print('🔄 CATALOG BUILDWHEN: Rebuilding due to state change');
+            print(
+                '   - Products changed: ${previous.products != current.products}');
+            print(
+                '   - Filtered products changed: ${previous.filteredProducts != current.filteredProducts}');
+            print('   - Status changed: ${previous.status != current.status}');
+          }
+
+          return shouldRebuild;
+        },
         builder: (context, state) {
           print(
-              'DEBUG CATALOG: Building with ${state.filteredProducts.length} filtered products');
-          print('DEBUG CATALOG: Status: ${state.status}');
-          print('DEBUG CATALOG: Total products: ${state.products.length}');
+              '🔄 CATALOG BUILDER: Building with ${state.filteredProducts.length} filtered products');
+          print('🔄 CATALOG BUILDER: Status: ${state.status}');
+          print('🔄 CATALOG BUILDER: Total products: ${state.products.length}');
 
           if (state.status == ProductsStatus.loading) {
             return const Center(child: CircularProgressIndicator());
@@ -505,6 +530,19 @@ class _CatalogTabState extends State<CatalogTab> with TickerProviderStateMixin {
           }
 
           final filteredProducts = state.filteredProducts;
+
+          if (filteredProducts.isEmpty) {
+            return const Center(
+              child: Text(
+                'Продукты не найдены',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            );
+          }
 
           return GridView.builder(
             shrinkWrap: true,
